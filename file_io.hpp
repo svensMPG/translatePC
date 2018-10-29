@@ -10,6 +10,8 @@ showHelp(char * program_name)
 {
   std::cout << std::endl;
   std::cout << "Usage: " << program_name << " cloud_filename.[pcd|ply]" << std::endl;
+  std::cout << "Optional specify the coordinate shift to translate the point cloud data by this amount.  " << std::endl;
+  std::cout << "Usage: " << program_name << " cloud_filename.[pcd|ply] -x 123.4 -y 456.45 -z 89.1" << std::endl;
   std::cout << "-h:  Show this help." << std::endl;
 }
 
@@ -23,7 +25,7 @@ void addMinValues(const pcl::PointCloud<pcl::PointXYZ>::Ptr &source_cloud,
     for(int i=0; i< source_cloud->size(); i++){
         pcl::PointXYZ tmp;
         tmp.x = static_cast<float>( (minvals[0] + static_cast<double> (source_cloud->points[i].x) ) );
-        tmp.y = static_cast<float>( (minvals[1] + static_cast<double> (source_cloud->points[i].x) ) );
+        tmp.y = static_cast<float>( (minvals[1] + static_cast<double> (source_cloud->points[i].y) ) );
         tmp.z = static_cast<float>( (minvals[2] + static_cast<double> (source_cloud->points[i].z) ) );
         transformed_cloud->points.push_back( tmp  );
 
@@ -48,7 +50,7 @@ void addMinValues(const pcl::PointCloud<pcl::PointXYZ>::Ptr &source_cloud,
 
     for(int i=0; i< source_cloud->size(); i++){
         x =  (minvals[0] + static_cast<double> (source_cloud->points[i].x) ) ;
-        y =  (minvals[1] + static_cast<double> (source_cloud->points[i].x) ) ;
+        y =  (minvals[1] + static_cast<double> (source_cloud->points[i].y) ) ;
         z =  (minvals[2] + static_cast<double> (source_cloud->points[i].z) ) ;
 
         intensityVec.push_back( static_cast<unsigned int>( (rand() % 255)) );
