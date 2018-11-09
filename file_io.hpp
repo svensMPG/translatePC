@@ -15,15 +15,15 @@ showHelp(char * program_name)
   std::cout << "-h:  Show this help." << std::endl;
 }
 
-
-void addMinValues(const pcl::PointCloud<pcl::PointXYZ>::Ptr &source_cloud,
-                  pcl::PointCloud<pcl::PointXYZ>::Ptr &transformed_cloud,
+template <typename PointT>
+void addMinValues(const typename pcl::PointCloud<PointT>::Ptr &source_cloud,
+                  typename pcl::PointCloud<PointT>::Ptr &transformed_cloud,
                   const std::vector<double> minvals)
 {
 
 
     for(int i=0; i< source_cloud->size(); i++){
-        pcl::PointXYZ tmp;
+        pcl::PointXYZI tmp;
         tmp.x = static_cast<float>( (minvals[0] + static_cast<double> (source_cloud->points[i].x) ) );
         tmp.y = static_cast<float>( (minvals[1] + static_cast<double> (source_cloud->points[i].y) ) );
         tmp.z = static_cast<float>( (minvals[2] + static_cast<double> (source_cloud->points[i].z) ) );
@@ -37,8 +37,8 @@ void addMinValues(const pcl::PointCloud<pcl::PointXYZ>::Ptr &source_cloud,
 
 }
 
-
-void addMinValues(const pcl::PointCloud<pcl::PointXYZ>::Ptr &source_cloud,
+template <typename PointT>
+void addMinValues(const typename pcl::PointCloud<PointT>::Ptr &source_cloud,
                   std::vector< std::vector<double> > &pointVector,
                   std::vector< unsigned int > &intensityVec,
                   const std::vector<double> minvals)
@@ -48,12 +48,23 @@ void addMinValues(const pcl::PointCloud<pcl::PointXYZ>::Ptr &source_cloud,
     double x,y,z;
     std::setprecision(11);
 
+    // check if input cloud has an intensity field. If so use provided data, else create random values
+    bool hasIntensity = false;
+    std::string pcFields = pcl::getFieldsList(*source_cloud);
+    if (pcFields.find("intensity") < std::string::npos-1)
+        hasIntensity = true;
+
+
     for(int i=0; i< source_cloud->size(); i++){
         x =  (minvals[0] + static_cast<double> (source_cloud->points[i].x) ) ;
         y =  (minvals[1] + static_cast<double> (source_cloud->points[i].y) ) ;
         z =  (minvals[2] + static_cast<double> (source_cloud->points[i].z) ) ;
 
-        intensityVec.push_back( static_cast<unsigned int>( (rand() % 255)) );
+        if (hasIntensity)
+            intensityVec.push_back( static_cast< unsigned int> (source_cloud->points[i].intensity) );
+        else
+            intensityVec.push_back( static_cast<unsigned int>( (rand() % 255)) );
+
         std::vector<double> point = {x,y,z};
         std::cerr << "DEBUG: point after adding values: \t " <<
                      point[0] << "\t" << point[1] << "\t" <<  point[2] << std::endl;

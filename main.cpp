@@ -53,7 +53,7 @@ main (int argc, char** argv)
   }
 
   bool minZSpecified = pcl::console::find_switch (argc, argv, "-z");
-  if (minXSpecified){
+  if (minZSpecified){
       pcl::console::parse (argc, argv, "-z", minZ);
   }
 
@@ -61,8 +61,8 @@ main (int argc, char** argv)
 
 
   // Load file | Works with PCD and PLY files
-  pcl::PointCloud<pcl::PointXYZ>::Ptr source_cloud (new pcl::PointCloud<pcl::PointXYZ> ());
-   pcl::PointCloud<pcl::PointXYZ>::Ptr transformed_cloud (new pcl::PointCloud<pcl::PointXYZ> ());
+  pcl::PointCloud<pcl::PointXYZI>::Ptr source_cloud (new pcl::PointCloud<pcl::PointXYZI> ());
+   pcl::PointCloud<pcl::PointXYZI>::Ptr transformed_cloud (new pcl::PointCloud<pcl::PointXYZI> ());
 
   if (file_is_pcd) {
     if (pcl::io::loadPCDFile (argv[filenames[0]], *source_cloud) < 0)  {
@@ -82,13 +82,13 @@ main (int argc, char** argv)
     pcl::io::savePCDFileASCII("bunny01.pcd", *source_cloud);
 
 
-   addMinValues(source_cloud,transformed_cloud,minXYZValues);
+   addMinValues<pcl::PointXYZI>(source_cloud,transformed_cloud,minXYZValues);
    pcl::io::savePCDFileASCII("Transformed.pcd", *transformed_cloud);
 
-   std::vector< std::vector< double > > pointVec;
-   std::vector< unsigned int > intensityVec;
+   std::vector < std::vector< double > > pointVec;
+   std::vector < unsigned int > intensityVec;
 
-   addMinValues(source_cloud,pointVec,intensityVec,minXYZValues);
+   addMinValues<pcl::PointXYZI>(source_cloud,pointVec,intensityVec,minXYZValues);
    toTXT("transformedPoints", pointVec, intensityVec);
 
 
