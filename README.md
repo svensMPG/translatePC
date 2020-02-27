@@ -12,6 +12,7 @@ This code here can easily be integrated into DetectWindows, however, there was n
 **Output**: a new point cloud with the coordinates shifted by the given arguments for x,y,z. 
 
 **run**: ./translatePC localCoordinateInputPC.pcd -x 358862.829062 -y 5701334.098114 -z 122.809974
+where the values for x,y,z are provided by the detectWindow method (logged in console) or another method that was used to shift the points. Ideally, this could be written in the header of an output file and then read from this little software (by extending its functionality).
 
 ## License
 GNU GENERAL PUBLIC LICENSE Version 3
